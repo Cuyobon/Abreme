@@ -1,0 +1,255 @@
+/* ===== Colores (cámbialos a tu gusto) ===== */
+:root {
+  --env-back:   #b8433f;   /* interior del sobre */
+  --env-side:   #e07a6f;   /* solapas laterales */
+  --env-bottom: #d9665c;   /* solapa inferior */
+  --env-flap:   #c9544c;   /* solapa superior */
+  --seal:       #8e1f2a;   /* sello de cera */
+  --bg:         #fff6ef;   /* fondo de la sorpresa */
+  --ink:        #5a1a22;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: "Poppins", system-ui, sans-serif;
+  background: var(--bg);
+}
+
+/* ================= SOBRE ================= */
+.envelope {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  perspective: 1600px;
+  transition: transform 1s cubic-bezier(.6, 0, .4, 1) 0.9s, opacity .6s ease 1.5s;
+}
+
+.envelope > div { position: absolute; inset: 0; }
+
+.env-back   { background: var(--env-back); }
+
+.env-left {
+  background: var(--env-side);
+  clip-path: polygon(0 0, 52% 52%, 0 100%);
+  filter: drop-shadow(2px 0 6px rgba(0,0,0,.15));
+}
+.env-right {
+  background: var(--env-side);
+  clip-path: polygon(100% 0, 48% 52%, 100% 100%);
+}
+.env-bottom {
+  background: var(--env-bottom);
+  clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+}
+.env-flap {
+  background: var(--env-flap);
+  clip-path: polygon(0 0, 100% 0, 50% 58%);
+  transform-origin: top center;
+  transition: transform .9s cubic-bezier(.5, 0, .3, 1);
+  z-index: 3;
+}
+
+/* Sello de cera */
+.seal {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  transform: translate(-50%, -50%);
+  width: clamp(80px, 14vmin, 130px);
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #c43a49, var(--seal) 70%);
+  box-shadow: 0 6px 18px rgba(0,0,0,.35), inset 0 -4px 8px rgba(0,0,0,.3);
+  cursor: pointer;
+  z-index: 5;
+  animation: pulse 1.8s ease-in-out infinite;
+  transition: opacity .3s, transform .3s;
+}
+.seal-heart {
+  color: #ffd9dc;
+  font-size: clamp(36px, 6vmin, 58px);
+  line-height: 1;
+}
+
+.hint {
+  position: absolute;
+  left: 50%;
+  top: calc(58% + clamp(60px, 10vmin, 95px));
+  transform: translateX(-50%);
+  z-index: 5;
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(26px, 5vmin, 46px);
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,.3);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* --- Estado abierto --- */
+.envelope.open .seal,
+.envelope.open .hint { opacity: 0; pointer-events: none; animation: none; }
+
+.envelope.open .env-flap { transform: rotateX(180deg); }
+
+.envelope.open {
+  transform: translateY(105%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ================= CONTENIDO ================= */
+.reveal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 2.5vh, 26px);
+  padding: 20px;
+  background:
+    radial-gradient(circle at 20% 15%, #ffe1d6 0, transparent 40%),
+    radial-gradient(circle at 85% 85%, #ffd6dc 0, transparent 45%),
+    var(--bg);
+}
+
+.title {
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(42px, 8vmin, 80px);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all .8s ease 2.2s;
+}
+.subtitle {
+  font-size: clamp(12px, 1.6vmin, 15px);
+  color: #9b6a6f;
+  opacity: 0;
+  transition: opacity .8s ease 2.6s;
+}
+
+.gallery {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: #fff;
+  padding: clamp(6px, 1.2vmin, 12px);
+  padding-bottom: clamp(14px, 3vmin, 30px);
+  border-radius: 6px;
+  box-shadow: 0 14px 35px rgba(90, 26, 34, .25);
+  cursor: zoom-in;
+  /* empieza escondida "dentro del sobre" */
+  opacity: 0;
+  transform: translateY(70vh) scale(.4) rotate(0deg);
+  transition:
+    transform 1.1s cubic-bezier(.2, .9, .3, 1.15) calc(1.1s + var(--d)),
+    opacity .4s ease calc(1.1s + var(--d)),
+    box-shadow .3s;
+}
+.card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.main   { width: min(42vw, 58vh); z-index: 2; }
+.ticket { width: min(19vw, 30vh); z-index: 1; }
+.ticket-left  { margin-right: -2.5vw; }
+.ticket-right { margin-left:  -2.5vw; }
+
+/* Al revelar */
+body.opened .card  { opacity: 1; transform: translateY(0) scale(1) rotate(var(--r)); }
+body.opened .title { opacity: 1; transform: translateY(0); }
+body.opened .subtitle { opacity: 1; }
+
+/* Hover: la foto se endereza y se levanta */
+body.ready .card { transition: transform .35s ease, box-shadow .35s ease; }
+body.ready .card:hover {
+  transform: translateY(-10px) scale(1.05) rotate(0deg);
+  box-shadow: 0 22px 45px rgba(90, 26, 34, .35);
+  z-index: 5;
+}
+
+/* Animación suave de "flotar" una vez que ya están en su lugar */
+body.ready .main          { animation: float 5s ease-in-out infinite; }
+body.ready .ticket-left   { animation: float 6s ease-in-out .6s infinite; }
+body.ready .ticket-right  { animation: float 5.5s ease-in-out 1.2s infinite; }
+body.ready .card:hover    { animation-play-state: paused; }
+
+@keyframes float {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -8px; }
+}
+
+/* ================= MÓVIL (vertical) ================= */
+@media (max-aspect-ratio: 4/5) {
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "main main"
+      "t1   t2";
+    justify-items: center;
+    gap: 0;
+    width: min(92vw, 520px);
+  }
+  .main  { grid-area: main; width: min(78vw, 42vh); margin-bottom: 2vh; }
+  .ticket-left  { grid-area: t1; width: min(40vw, 25vh); margin: 0; justify-self: end; margin-right: -2vw; }
+  .ticket-right { grid-area: t2; width: min(40vw, 25vh); margin: 0; justify-self: start; margin-left: -2vw; }
+}
+
+/* ================= LIGHTBOX ================= */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 8, 12, .85);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s;
+  cursor: zoom-out;
+}
+.lightbox img {
+  max-width: 92vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  transform: scale(.9);
+  transition: transform .3s;
+}
+.lightbox.show { opacity: 1; pointer-events: auto; }
+.lightbox.show img { transform: scale(1); }
+
+/* ================= CONFETI ================= */
+#confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Accesibilidad: sin animaciones si el usuario lo pide */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01s !important; animation: none !important; }
+}

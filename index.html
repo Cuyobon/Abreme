@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Una sorpresa para ti</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== SOBRE (pantalla completa) ===== -->
+  <div class="envelope" id="envelope">
+    <div class="env-back"></div>
+    <div class="env-left"></div>
+    <div class="env-right"></div>
+    <div class="env-bottom"></div>
+    <div class="env-flap"></div>
+
+    <button class="seal" id="seal" aria-label="Abrir sorpresa">
+      <span class="seal-heart">♥</span>
+    </button>
+    <p class="hint">click para una sorpresa</p>
+  </div>
+
+  <!-- ===== CONTENIDO REVELADO ===== -->
+  <main class="reveal" id="reveal">
+    <h1 class="title">¡Sorpresa!</h1>
+
+    <div class="gallery">
+      <figure class="card ticket ticket-left" style="--r:-9deg; --d:.15s">
+        <img src="img/boleto-1.jpg" alt="Boleto 1" />
+      </figure>
+
+      <figure class="card main" style="--r:2deg; --d:0s">
+        <img src="img/foto-principal.jpg" alt="Foto principal" />
+      </figure>
+
+      <figure class="card ticket ticket-right" style="--r:8deg; --d:.3s">
+        <img src="img/boleto-2.jpg" alt="Boleto 2" />
+      </figure>
+    </div>
+
+    <p class="subtitle">Toca cualquier foto para verla en grande</p>
+  </main>
+
+  <!-- Visor de foto en grande -->
+  <div class="lightbox" id="lightbox">
+    <img id="lightbox-img" alt="" />
+  </div>
+
+  <canvas id="confetti"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>
