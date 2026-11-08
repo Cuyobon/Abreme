@@ -249,6 +249,32 @@ body.ready .card:hover    { animation-play-state: paused; }
   z-index: 15;
 }
 
+/* ================= BOTÓN DE MÚSICA ================= */
+.music-btn {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 16;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: var(--seal);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .6s ease 2.4s;
+}
+.music-btn.show { opacity: 1; pointer-events: auto; }
+.music-btn svg { width: 24px; height: 24px; fill: currentColor; }
+.music-btn .icon-off,
+.music-btn.muted .icon-on { display: none; }
+.music-btn.muted .icon-off { display: block; }
+
 /* Accesibilidad: sin animaciones si el usuario lo pide */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01s !important; animation: none !important; }

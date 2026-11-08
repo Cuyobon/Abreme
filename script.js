@@ -2,12 +2,37 @@ const envelope = document.getElementById("envelope");
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
 
+const song = document.getElementById("song");
+const musicBtn = document.getElementById("music-btn");
+const SONG_START = 0; // segundo en el que arranca la canción (ej. 45 para empezar en el coro)
+
 let opened = false;
+
+/* ---------- Música ---------- */
+function playSong() {
+  song.currentTime = SONG_START;
+  const p = song.play();               // se llama dentro del clic: así iOS y Android lo permiten
+  if (p) p.then(() => musicBtn.classList.add("show")).catch(() => {});
+}
+
+musicBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (song.paused) {
+    song.play();
+    musicBtn.classList.remove("muted");
+    musicBtn.setAttribute("aria-label", "Pausar música");
+  } else {
+    song.pause();
+    musicBtn.classList.add("muted");
+    musicBtn.setAttribute("aria-label", "Reproducir música");
+  }
+});
 
 /* ---------- Abrir el sobre ---------- */
 function openEnvelope() {
   if (opened) return;
   opened = true;
+  playSong();
 
   envelope.classList.add("open");          // abre la solapa y baja el sobre
   document.body.classList.add("opened");   // las fotos salen volando
